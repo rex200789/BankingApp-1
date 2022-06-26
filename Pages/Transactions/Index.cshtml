@@ -1,0 +1,51 @@
+﻿@page
+@model BankingApp.Pages.Transactions.IndexModel
+
+@{
+    ViewData["Title"] = "All Transactions";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <!--<th>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transaction[0].FromAccountBalance)
+            </th>
+            <th>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transaction[0].ToAccountBalance)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transaction[0].TransactionTime)
+            </th>-->
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Transaction) {
+        <tr>
+            <!--<td>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FromAccountBalance)
+            </td>
+            <td>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ToAccountBalance)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TransactionTime)
+            </td> -->
+            <td>
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,10 @@
+﻿@page
+@model BankingApp.Pages.Transactions.TransferModel
+@{
+    ViewData["Title"] = "Transfer Funds";
+}
+
+<h1>@ViewData["Title"]</h1>
+<form method="post">
+<p class="bold">From Account<select id="fromAccount" name="fromAccountId" asp-items="@Model.FromAccounts"></select> To Account<select id="fromAccount" name="fromAccountId" asp-items="@Model.ToAccounts"></select> Amount to transfer<input value="@Model.TransferAmount" /><button type="submit">Transfer</button></p>
+</form>

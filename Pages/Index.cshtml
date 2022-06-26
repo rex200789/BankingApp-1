@@ -1,0 +1,12 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to banking app</h1>
+    <p>View all accounts <a asp-area="" asp-page="/Accounts/index">here</a>.</p>
+    <p>Initiate a Transfer <a asp-area="" asp-page="/Transactions/Transfer">here</a>.</p>
+    <p>View all transactions <a asp-area="" asp-page="/Transactions/index">here</a>.</p>
+</div>
