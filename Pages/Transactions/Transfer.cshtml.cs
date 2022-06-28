@@ -12,7 +12,13 @@ namespace BankingApp.Pages.Transactions
     {
         private readonly Data.BankingAppContext _context;
 
-        //private readonly ILogger<TransferModel> _logger;
+        [BindProperty]
+        public TransferVM TransferVM { get; set; }
+        public decimal TransferAmount { get; set; }
+        public List<string> ErrorMessages { get; set; }
+        public SelectList FromAccounts { get; set; }
+        public SelectList ToAccounts { get; set; }
+
         public TransferModel(Data.BankingAppContext context
                             )
         {
@@ -20,20 +26,13 @@ namespace BankingApp.Pages.Transactions
         }
         public async void OnGetAsync()
         {
+            if(this.ErrorMessages == null) 
+            {
+                this.ErrorMessages = new List<string>();
+            }
             this.FromAccounts = new SelectList(populateAccounts(), "Id", "Name");
             this.ToAccounts = new SelectList(populateAccounts(), "Id", "Name");
         }
-
-        
-        public Transaction Transaction { get; set; }
-        public IList<TransactionVM> Transactions { get; set; }
-
-        public SelectList FromAccounts { get; set; }
-        public SelectList ToAccounts { get; set; }
-        [BindProperty]
-        public TransferVM TransferVM { get; set; }
-        public decimal TransferAmount { get; set; }
-        public string ErrorMessage { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -44,30 +43,41 @@ namespace BankingApp.Pages.Transactions
 
             try
             {
-                // Fill out Tansfer View Model
+                if (this.ErrorMessages == null)
+                {
+                    this.ErrorMessages = new List<string>();
+                }
+
                 var fromAccount = _context.Accounts.FindAsync(TransferVM.FromAccountId).Result;
+                var toAccount = _context.Accounts.FindAsync(TransferVM.ToAccountId).Result;
+                ValidateEntry(fromAccount, toAccount);
+                // Fill out Tansfer View Model
+                
                 TransferVM.FromAccountBalance = fromAccount.Balance;
 
-                var toAccount = _context.Accounts.FindAsync(TransferVM.ToAccountId).Result;
-                TransferVM.ToAccountBalance = toAccount.Balance;
+                if (ErrorMessages == null || ErrorMessages.Count == 0)
+                {
+                    
+                    TransferVM.ToAccountBalance = toAccount.Balance;
                 
-                TransferVM.TransactionTime = DateTime.Now;
+                    TransferVM.TransactionTime = DateTime.Now;
 
-                // Update Account balances
-                fromAccount.Balance -= TransferVM.Amount;
-                toAccount.Balance += TransferVM.Amount; 
+                    // Update Account balances
+                    fromAccount.Balance -= TransferVM.Amount;
+                    toAccount.Balance += TransferVM.Amount; 
                 
-                var entry = _context.Add(new Transaction());
-                entry.CurrentValues.SetValues(TransferVM);
-                await _context.SaveChangesAsync();
-                return RedirectToPage("./Index");
+                    var entry = _context.Add(new Transaction());
+                    entry.CurrentValues.SetValues(TransferVM);
+                    await _context.SaveChangesAsync();
+                    return RedirectToPage("./Index");
+                }
+
+                return Page();
             }
             catch(DbUpdateException ex)
             {
-                return RedirectToPage("./Index");
-                // _logger.LogError(ex, ErrorMessage);
-                //return RedirectToAction("./Transfer",
-                //                 new { tm.Id, tm.FromAccountId, tm.ToAccountId, tm.Amount, saveChangesError = true });
+                ErrorMessages.Add("There was an issue with this transfer");
+                return Page();
             }
         }
 
@@ -75,6 +85,36 @@ namespace BankingApp.Pages.Transactions
         {
             var Accounts = _context.Accounts.ToList();
             return Accounts;
+        }
+
+        private void ValidateEntry(Account fromAccount, Account toAccount)
+        {
+            if (fromAccount == null)
+            {
+                ErrorMessages.Add("Invalid From Account");
+            }
+            else if (fromAccount.Balance < TransferVM.Amount)
+            {
+                ErrorMessages.Add("Insufficient funds in account");
+            }
+
+            if (toAccount == null)
+            {
+                ErrorMessages.Add("Invalid To Account");
+            }
+
+            if(fromAccount != null && toAccount != null)
+            {
+                if(fromAccount.Id == toAccount.Id)
+                {
+                    ErrorMessages.Add("Same account selected for transfer. Please transfer between two seperate accounts");
+                }
+            }
+
+            if(TransferVM != null && (TransferVM.Amount < 1 || TransferVM.Amount > 10000))
+            {
+                ErrorMessages.Add("Invalid Amount. Please enter an Amount between $1 and $10000");
+            }
         }
     }
 }
