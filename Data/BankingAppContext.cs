@@ -22,6 +22,10 @@ namespace BankingApp.Data
         {
             modelBuilder.Entity<Account>().ToTable("Account");
             modelBuilder.Entity<Transaction>().ToTable("Transaction");
+                                              
+                                              
+
+
         }
     }
 }

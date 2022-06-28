@@ -29,7 +29,7 @@ namespace BankingApp.Pages.Accounts
                 return Page();
             }
 
-            var entry = _context.Add(new AccountVM());
+            var entry = _context.Add(new Account());
             entry.CurrentValues.SetValues(AccountVM);
             await _context.SaveChangesAsync();
             return RedirectToPage("./Index");

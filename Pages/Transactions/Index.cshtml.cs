@@ -25,7 +25,7 @@ namespace BankingApp.Pages.Transactions
         {
             if (_context.Transactions != null)
             {
-                Transaction = await _context.Transactions.Take(10).ToListAsync();
+                Transaction = await _context.Transactions.Include(a=>a.FromAccountG).Include(b=>b.ToAccountG).ToListAsync();
             }
         }
     }

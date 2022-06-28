@@ -10,38 +10,48 @@
 <table class="table">
     <thead>
         <tr>
-            <!--<th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transaction[0].FromAccountId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transaction[0].ToAccountId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transaction[0].TransactionTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transaction[0].Amount)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Transaction[0].FromAccountBalance)
             </th>
             <th>
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Transaction[0].ToAccountBalance)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Transaction[0].TransactionTime)
-            </th>-->
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model.Transaction) {
         <tr>
-            <!--<td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FromAccountG.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ToAccountG.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TransactionTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FromAccountBalance)
             </td>
             <td>
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.ToAccountBalance)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TransactionTime)
-            </td> -->
             <td>
                 <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
             </td>

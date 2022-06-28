@@ -4,6 +4,7 @@ using BankingApp.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BankingApp.Models.Views;
 using Microsoft.EntityFrameworkCore;
+using BankingApp.Models.View;
 
 namespace BankingApp.Pages.Transactions
 {
@@ -17,20 +18,24 @@ namespace BankingApp.Pages.Transactions
         {
             _context = context;
         }
-        public void OnGet()
+        public async void OnGetAsync()
         {
             this.FromAccounts = new SelectList(populateAccounts(), "Id", "Name");
             this.ToAccounts = new SelectList(populateAccounts(), "Id", "Name");
         }
 
-        [BindProperty]
+        
         public Transaction Transaction { get; set; }
+        public IList<TransactionVM> Transactions { get; set; }
+
         public SelectList FromAccounts { get; set; }
         public SelectList ToAccounts { get; set; }
+        [BindProperty]
+        public TransferVM TransferVM { get; set; }
         public decimal TransferAmount { get; set; }
         public string ErrorMessage { get; set; }
 
-        public async Task<IActionResult> OnPostAsync(TransferVM tm)
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
@@ -39,8 +44,21 @@ namespace BankingApp.Pages.Transactions
 
             try
             {
+                // Fill out Tansfer View Model
+                var fromAccount = _context.Accounts.FindAsync(TransferVM.FromAccountId).Result;
+                TransferVM.FromAccountBalance = fromAccount.Balance;
+
+                var toAccount = _context.Accounts.FindAsync(TransferVM.ToAccountId).Result;
+                TransferVM.ToAccountBalance = toAccount.Balance;
+                
+                TransferVM.TransactionTime = DateTime.Now;
+
+                // Update Account balances
+                fromAccount.Balance -= TransferVM.Amount;
+                toAccount.Balance += TransferVM.Amount; 
+                
                 var entry = _context.Add(new Transaction());
-                entry.CurrentValues.SetValues(Transaction);
+                entry.CurrentValues.SetValues(TransferVM);
                 await _context.SaveChangesAsync();
                 return RedirectToPage("./Index");
             }
