@@ -19,8 +19,7 @@ namespace BankingApp.Pages.Transactions
         public SelectList FromAccounts { get; set; }
         public SelectList ToAccounts { get; set; }
 
-        public TransferModel(Data.BankingAppContext context
-                            )
+        public TransferModel(Data.BankingAppContext context)
         {
             _context = context;
         }

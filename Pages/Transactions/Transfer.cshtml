@@ -3,38 +3,6 @@
 @{
     ViewData["Title"] = "Transfer Funds";
 }
-<head>
-    <script type="text/javascript">
-
-        function validate() {
-            let isValid = true;
-            var fromAccountId = $('#fromAccountId').children("option:selected").val();
-            var toAccountId = $('#toAccountId').children("option:selected").val();
-            var amount = $('#transferAmount').val();
-
-            if (fromAccountId == null){
-                $('#errorList').append("<li>Invalid From Account</li>");
-                isValid = false;
-            }
-
-            if(fromAccountId != null && toAccountId != null)
-            {
-                if(fromAccountId.val == fromAccountId.val)
-                {
-                    $('#errorList').append("<li>Same account selected for transfer. Please transfer between two seperate accounts</li>");
-                    isValid = false;
-                }
-            }
-
-            if(amount != null && ( amount < 1 || amount > 10000))
-            {
-                $('#errorList').append("<li>Invalid Amount. Please enter an Amount between $1 and $10000</li>");
-                isValid = false;
-            }
-            return isValid;
-        }
-    </script>
-</head>
 
 <h1>@ViewData["Title"]</h1>
 <div id="error" name="errorMsg" class="alert-danger">
@@ -45,14 +13,14 @@
         }
     </ul>
 </div>
-<form method="post" onsubmit="validate(this);">
+<form method="post">
 <p class="bold">
     From Account
-    <select id="fromAccountId" name="fromAccountId" class="required" asp-for="TransferVM.FromAccountId" asp-items="@Model.FromAccounts"></select>
+    <select id="fromAccountId" class="required" asp-for="TransferVM.FromAccountId" asp-items="@Model.FromAccounts"></select>
     To Account
-    <select id="toAccountId" name="toAccountId" class="required" asp-for="TransferVM.ToAccountId" asp-items="@Model.ToAccounts"></select>
+    <select id="toAccountId" class="required" asp-for="TransferVM.ToAccountId" asp-items="@Model.ToAccounts"></select>
     Amount to transfer
-    <input id="transferAmount" name="transferAmount" class="required" asp-for="TransferVM.Amount" />
+    <input id="transferAmount" class="required" asp-for="TransferVM.Amount" />
     <button type="submit">Transfer</button></p>
 </form>
 
