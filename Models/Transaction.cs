@@ -20,9 +20,6 @@ namespace BankingApp.Models
         public DateTime TransactionTime { get; set; }
         [Display(Name = "Amount Debited")]
         public decimal Amount { get; set; }
-        
-        public string FromAccount { get; set; }
-        public string ToAccount { get; set; }
 
         [ForeignKey("FromAccountId")]
         public virtual Account FromAccountG { get; set; }
