@@ -4,7 +4,6 @@ using BankingApp.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BankingApp.Models.Views;
 using Microsoft.EntityFrameworkCore;
-using BankingApp.Models.View;
 
 namespace BankingApp.Pages.Transactions
 {
@@ -14,23 +13,20 @@ namespace BankingApp.Pages.Transactions
 
         [BindProperty]
         public TransferVM TransferVM { get; set; }
-        public decimal TransferAmount { get; set; }
         public List<string> ErrorMessages { get; set; }
-        public SelectList FromAccounts { get; set; }
-        public SelectList ToAccounts { get; set; }
+        public SelectList FromAccounts { get { return new SelectList(populateAccounts(), "Id", "Name"); } set {  } }
+        public SelectList ToAccounts { get { return new SelectList(populateAccounts(), "Id", "Name"); } set { } }
 
         public TransferModel(Data.BankingAppContext context)
         {
             _context = context;
         }
-        public async void OnGetAsync()
+        public void OnGet()
         {
-            if(this.ErrorMessages == null) 
+            if (this.ErrorMessages == null)
             {
                 this.ErrorMessages = new List<string>();
             }
-            this.FromAccounts = new SelectList(populateAccounts(), "Id", "Name");
-            this.ToAccounts = new SelectList(populateAccounts(), "Id", "Name");
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -71,6 +67,7 @@ namespace BankingApp.Pages.Transactions
                     return RedirectToPage("./Index");
                 }
 
+                
                 return Page();
             }
             catch(DbUpdateException ex)

@@ -13,9 +13,9 @@ namespace BankingApp.Pages.Accounts
 {
     public class EditModel : PageModel
     {
-        private readonly BankingApp.Data.BankingAppContext _context;
+        private readonly BankingAppContext _context;
 
-        public EditModel(BankingApp.Data.BankingAppContext context)
+        public EditModel(BankingAppContext context)
         {
             _context = context;
         }
